@@ -4,8 +4,9 @@
       <section
         class="slide"
         [class.active]="i === current()"
+        [class.next]="i === current() + 1"
         [style.z-index]="getZIndex(i)"
-        [style.transform]="'translateY(' + getTranslateY(i) + '%)'"
+        [style.transform]="'translateY(' + getTranslateY(i) + ')'"
         [style.backgroundImage]="'url(' + slide.photos[0] + ')'"
         (click)="goToDestination(slide.id)"
         role="button"
@@ -16,7 +17,6 @@
         <div class="overlay"></div>
 
         <span class="brand">ROOFTOP BIVOUAC</span>
-        <a class="cta" [routerLink]="['/destination', slide.id]" (click)="$event.stopPropagation()">VOIR ↗</a>
 
         <div class="bottom">
           <h1 class="destination">{{ slide.name }}</h1>
@@ -28,6 +28,10 @@
       </section>
     }
   </div>
+
+  @if (slides().length && slides()[current()]; as currentSlide) {
+    <a class="cta-fixed" [routerLink]="['/destination', currentSlide.id]">VOIR ↗</a>
+  }
 
   <div class="dots">
     @for (slide of slides(); track slide.id; let i = $index) {

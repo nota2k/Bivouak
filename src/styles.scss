@@ -5,7 +5,8 @@
 }
 
 :root {
-  --bg-page: #000;
+  --bg-page: #fffef9;
+  --bg-page-dark: #000;
   --bg-caramel: #C2956A;
   --bg-taupe: #A38979;
   --bg-sienna: #8F5A3C;
@@ -25,7 +26,7 @@
 html, body {
   height: 100%;
   font-family: var(--font-sans);
-  background: var(--bg-page);
+  background: var(--bg-page-dark);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
 }

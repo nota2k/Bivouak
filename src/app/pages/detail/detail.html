@@ -1,7 +1,7 @@
 @if (destination(); as d) {
   <div class="detail">
     <!-- Photo Panel -->
-    <div class="photo" [style.backgroundImage]="'url(' + (d.photos[0] ?? '') + ')'">
+    <div class="photo" [style.backgroundImage]="'url(' + (selectedPhoto() || d.photos[0] ?? '') + ')'">
       <div class="photo-overlay"></div>
       <a class="photo-back" routerLink="/" aria-label="Retour">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -52,10 +52,14 @@
       @if (d.photos.length > 1) {
         <div class="gallery">
           <div class="gallery-grid" appMasonry [appMasonryColumns]="2" [appMasonryGap]="0" [appMasonryFillHeight]="true">
-            @for (url of d.photos.slice(1, 5); track $index) {
-              <div class="gallery-item">
-                <img [src]="url" [alt]="'Photo ' + ($index + 2)" loading="lazy" />
-              </div>
+            @for (item of getGalleryItems(d); track $index) {
+              @if (item.type === 'photo' && item.url) {
+                <div class="gallery-item" (click)="selectPhoto(item.url!)" role="button" tabindex="0" (keydown.enter)="selectPhoto(item.url!)" (keydown.space)="selectPhoto(item.url!); $event.preventDefault()">
+                  <img [src]="item.url" [alt]="'Photo ' + ($index + 2)" loading="lazy" />
+                </div>
+              } @else if (item.type === 'placeholder' && item.bg) {
+                <div class="gallery-item gallery-placeholder" [style.background]="item.bg"></div>
+              }
             }
           </div>
         </div>

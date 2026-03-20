@@ -61,11 +61,13 @@ export class Swiper {
     this.router.navigate(['/destination', id]);
   }
 
-  getTranslateY(i: number): number {
+  getTranslateY(i: number): string {
     const c = this.current();
     // Même logique pour next et prev : actuelle et précédentes à 0, suivantes à 100
-    // Next : la suivante monte (100 → 0) et superpose. Prev : l'actuelle redescend (0 → 100) une par une
-    return i <= c ? 0 : 100;
+    // La slide suivante (next) est 50px plus haute au départ pour créer un aperçu
+    if (i <= c) return '0';
+    if (i === c + 1) return 'calc(100% - 50px)';
+    return '100%';
   }
 
   getZIndex(i: number): number {

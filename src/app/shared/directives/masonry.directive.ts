@@ -47,7 +47,7 @@ export class MasonryDirective implements AfterViewInit, OnDestroy {
 
   private layout() {
     const container = this.el.nativeElement as HTMLElement;
-    const items = Array.from(container.querySelectorAll<HTMLElement>('.gallery-item'));
+    const items = Array.from(container.querySelectorAll<HTMLElement>('.gallery-item, .gallery-placeholder'));
     if (!items.length) return;
 
     const imgs = items.map((item) => item.querySelector<HTMLImageElement>('img')).filter(Boolean);
