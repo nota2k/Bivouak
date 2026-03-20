@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 
-const API = 'http://localhost:3000/api';
+const API = '/api';
 
 export interface LoginResponse {
   token: string;

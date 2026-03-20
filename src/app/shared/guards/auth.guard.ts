@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { map, take, catchError, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
-const API = 'http://localhost:3000/api';
+const API = '/api';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const auth = inject(AuthService);
