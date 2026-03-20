@@ -128,19 +128,24 @@ export class AdminForm implements OnInit {
     this.isDragging = false;
   }
 
+  readonly maxPhotos = 5; // 1 mise en avant + 4 galerie
+
   uploadFiles(files: File[]) {
-    const images = files.filter((f) => /^image\/(jpeg|png|gif|webp)$/i.test(f.type));
+    const images = files.filter((f) => /^image\/(jpeg|png|gif|webp|heic|heif)$/i.test(f.type));
     if (!images.length) return;
+    const remaining = this.maxPhotos - this.photos.length;
+    if (remaining <= 0) return;
+    const toUpload = images.slice(0, remaining);
     this.uploadProgress = true;
     let done = 0;
-    images.forEach((file) => {
+    toUpload.forEach((file) => {
       this.uploadService.uploadPhoto(file).subscribe({
         next: (res) => {
           this.photos.push(res.url);
-          if (++done === images.length) this.uploadProgress = false;
+          if (++done === toUpload.length) this.uploadProgress = false;
         },
         error: () => {
-          if (++done === images.length) this.uploadProgress = false;
+          if (++done === toUpload.length) this.uploadProgress = false;
         },
       });
     });

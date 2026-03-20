@@ -7,11 +7,16 @@
         [style.z-index]="i === current() ? 10 : (i < current() ? 5 : 1)"
         [style.transform]="'translateY(' + getTranslateY(i) + '%)'"
         [style.backgroundImage]="'url(' + slide.photos[0] + ')'"
+        (click)="goToDestination(slide.id)"
+        role="button"
+        tabindex="0"
+        (keydown.enter)="goToDestination(slide.id)"
+        (keydown.space)="goToDestination(slide.id); $event.preventDefault()"
       >
         <div class="overlay"></div>
 
         <span class="brand">ROOFTOP BIVOUAC</span>
-        <a class="cta" [routerLink]="['/destination', slide.id]">VOIR ↗</a>
+        <a class="cta" [routerLink]="['/destination', slide.id]" (click)="$event.stopPropagation()">VOIR ↗</a>
 
         <div class="bottom">
           <h1 class="destination">{{ slide.name }}</h1>

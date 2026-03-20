@@ -1,11 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DestinationsService } from '../../shared/services/destinations.service';
 import { Destination } from '../../shared/models/destination.model';
+import { MasonryDirective } from '../../shared/directives/masonry.directive';
 
 @Component({
   selector: 'app-detail',
-  imports: [],
+  imports: [RouterLink, MasonryDirective],
   templateUrl: './detail.html',
   styleUrl: './detail.scss',
 })

@@ -1,8 +1,13 @@
 @if (destination(); as d) {
   <div class="detail">
     <!-- Photo Panel -->
-    <div class="photo" [style.backgroundImage]="'url(' + d.photos[0] + ')'">
+    <div class="photo" [style.backgroundImage]="'url(' + (d.photos[0] ?? '') + ')'">
       <div class="photo-overlay"></div>
+      <a class="photo-back" routerLink="/" aria-label="Retour">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+      </a>
       <span class="photo-brand">ROOFTOP BIVOUAC</span>
       <span class="photo-num">{{ photoNum() }}</span>
       <h1 class="photo-location">{{ d.name }}</h1>
@@ -43,8 +48,22 @@
       </div>
       <hr />
 
+      <!-- Galerie -->
+      @if (d.photos.length > 1) {
+        <div class="gallery">
+          <div class="gallery-grid" appMasonry [appMasonryColumns]="2" [appMasonryGap]="0" [appMasonryFillHeight]="true">
+            @for (url of d.photos.slice(1, 5); track $index) {
+              <div class="gallery-item">
+                <img [src]="url" [alt]="'Photo ' + ($index + 2)" loading="lazy" />
+              </div>
+            }
+          </div>
+        </div>
+        <hr />
+      }
+
       <!-- Map -->
-      <div class="map" [style.backgroundImage]="'url(' + (d.photos[1] ?? d.photos[0]) + ')'">
+      <div class="map">
         <span class="map-label">LOCALISATION GPS</span>
         <div class="gps-pulse"></div>
         <div class="gps-pin"><div class="gps-dot"></div></div>

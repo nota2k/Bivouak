@@ -27,8 +27,8 @@ const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    const ok = /^image\/(jpeg|png|gif|webp)$/i.test(file.mimetype);
-    cb(ok ? null : new Error('Format non supporté (jpg, png, gif, webp)'), ok);
+    const ok = /^image\/(jpeg|png|gif|webp|heic|heif)$/i.test(file.mimetype);
+    cb(ok ? null : new Error('Format non supporté (jpg, png, gif, webp, heic)'), ok);
   },
 });
 
@@ -128,7 +128,8 @@ app.post('/api/destinations', authMiddleware, (req, res) => {
 
     db.prepare('DELETE FROM photos WHERE destination_id = ?').run(id);
     const insertPhoto = db.prepare('INSERT INTO photos (destination_id, url) VALUES (?, ?)');
-    (photos || []).forEach((url) => insertPhoto.run(id, url));
+    const photosToSave = (photos || []).slice(0, 5); // 1 mise en avant + 4 galerie
+    photosToSave.forEach((url) => insertPhoto.run(id, url));
 
     db.prepare('DELETE FROM ratings WHERE destination_id = ?').run(id);
     const insertRating = db.prepare('INSERT INTO ratings (destination_id, label, value, color) VALUES (?, ?, ?, ?)');

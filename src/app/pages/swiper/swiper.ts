@@ -1,5 +1,5 @@
 import { Component, signal, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { DestinationsService } from '../../shared/services/destinations.service';
 import { Destination } from '../../shared/models/destination.model';
 
@@ -11,6 +11,7 @@ import { Destination } from '../../shared/models/destination.model';
 })
 export class Swiper {
   private destinationsService = inject(DestinationsService);
+  private router = inject(Router);
   current = signal(0);
   slides = signal<Destination[]>([]);
   private isAnimating = false;
@@ -45,6 +46,10 @@ export class Swiper {
     this.isAnimating = true;
     this.current.set(i);
     setTimeout(() => (this.isAnimating = false), 600);
+  }
+
+  goToDestination(id: string) {
+    this.router.navigate(['/destination', id]);
   }
 
   getTranslateY(i: number): number {
