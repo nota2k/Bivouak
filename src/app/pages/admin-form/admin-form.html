@@ -1,0 +1,77 @@
+<div class="admin-form">
+  <app-sidebar />
+
+  <main class="content">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <span class="label">NOUVEAU VOYAGE</span>
+      <div class="top-actions">
+        <a class="btn-cancel" routerLink="/admin">ANNULER</a>
+        <button class="btn-save">ENREGISTRER</button>
+      </div>
+    </div>
+    <hr />
+
+    <!-- Form Area -->
+    <div class="form-area">
+      <!-- Left Column -->
+      <div class="left-col">
+        <label class="field-label">DESTINATION</label>
+        <input type="text" class="field-input" placeholder="Nom du lieu" />
+        <hr />
+
+        <label class="field-label">RÉGION / PAYS</label>
+        <input type="text" class="field-input" placeholder="Ex: Hautes-Alpes, France" />
+        <hr />
+
+        <label class="field-label">COORDONNÉES GPS</label>
+        <div class="gps-row">
+          <input type="text" class="field-input" placeholder="Latitude" />
+          <input type="text" class="field-input" placeholder="Longitude" />
+        </div>
+        <hr />
+
+        <label class="field-label">NOTES DE VOYAGE</label>
+        <textarea class="field-textarea" placeholder="Décrivez le spot..."></textarea>
+        <hr />
+
+        <label class="field-label">STATUT</label>
+        <div class="status-row">
+          <button class="status-btn active">BROUILLON</button>
+          <button class="status-btn">PUBLIÉ</button>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="right-col">
+        <div class="photo-upload">
+          <span class="photo-label">GLISSER UNE PHOTO OU CLIQUER</span>
+        </div>
+        <hr />
+
+        <div class="ratings-form">
+          <span class="label">NOTATIONS</span>
+          <div class="rating-fields">
+            <div class="rating-field">
+              <label>VUE</label>
+              <input type="number" min="0" max="10" step="0.1" placeholder="0.0" />
+            </div>
+            <div class="rating-field">
+              <label>CALME</label>
+              <input type="number" min="0" max="10" step="0.1" placeholder="0.0" />
+            </div>
+            <div class="rating-field">
+              <label>ACCÈS</label>
+              <input type="number" min="0" max="10" step="0.1" placeholder="0.0" />
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <div class="map-preview">
+          <span class="map-label">APERÇU CARTE</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,50 @@
+<div class="admin-list">
+  <app-sidebar />
+
+  <main class="content">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <span class="label">GESTION DES VOYAGES</span>
+      <a class="top-cta" routerLink="/admin/nouveau">+ AJOUTER UN VOYAGE</a>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat caramel">
+        <span class="stat-label">SPOTS ACTIFS</span>
+        <span class="stat-num">12</span>
+      </div>
+      <div class="stat taupe">
+        <span class="stat-label">RÉGIONS</span>
+        <span class="stat-num">3</span>
+      </div>
+      <div class="stat sienna">
+        <span class="stat-label">VUES CE MOIS</span>
+        <span class="stat-num">847</span>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table">
+      <div class="table-header">
+        <span class="th grow">DESTINATION</span>
+        <span class="th w160">RÉGION</span>
+        <span class="th w100">NOTE</span>
+        <span class="th w140">DATE</span>
+        <span class="th w120">STATUS</span>
+      </div>
+      <hr />
+
+      @for (row of trips; track row.destination) {
+        <div class="table-row">
+          <span class="td grow">{{ row.destination }}</span>
+          <span class="td w160">{{ row.region }}</span>
+          <span class="td w100">{{ row.note }}</span>
+          <span class="td w140">{{ row.date }}</span>
+          <span class="td w120 status" [class.draft]="row.status === 'BROUILLON'">{{ row.status }}</span>
+        </div>
+        <hr />
+      }
+    </div>
+  </main>
+</div>

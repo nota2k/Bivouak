@@ -1,0 +1,32 @@
+<div class="swiper" (wheel)="onWheel($event)" (keydown.ArrowDown)="next()" (keydown.ArrowUp)="prev()" tabindex="0">
+  <div class="slides-container">
+    @for (slide of slides(); track slide.id; let i = $index) {
+      <section
+        class="slide"
+        [class.active]="i === current()"
+        [style.z-index]="i === current() ? 10 : (i < current() ? 5 : 1)"
+        [style.transform]="'translateY(' + getTranslateY(i) + '%)'"
+        [style.backgroundImage]="'url(' + slide.photos[0] + ')'"
+      >
+        <div class="overlay"></div>
+
+        <span class="brand">ROOFTOP BIVOUAC</span>
+        <a class="cta" [routerLink]="['/destination', slide.id]">VOIR ↗</a>
+
+        <div class="bottom">
+          <h1 class="destination">{{ slide.name }}</h1>
+          <div class="divider"></div>
+          <span class="region">{{ slide.region }}</span>
+        </div>
+
+        <span class="indicator">{{ (i + 1).toString().padStart(2, '0') }} / {{ slides().length.toString().padStart(2, '0') }}</span>
+      </section>
+    }
+  </div>
+
+  <div class="dots">
+    @for (slide of slides(); track slide.id; let i = $index) {
+      <button class="dot" [class.active]="i === current()" (click)="goTo(i)"></button>
+    }
+  </div>
+</div>

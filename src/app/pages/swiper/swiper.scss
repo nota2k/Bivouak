@@ -1,0 +1,140 @@
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.swiper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  overflow: hidden;
+}
+
+.slides-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+
+  &.active {
+    pointer-events: auto;
+  }
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.brand {
+  position: absolute;
+  top: 48px;
+  left: 80px;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: rgba(255, 255, 255, 0.6);
+  z-index: 1;
+}
+
+.cta {
+  position: absolute;
+  top: 48px;
+  right: 80px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-white);
+  z-index: 1;
+  cursor: pointer;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 30px;
+  left: 80px;
+  z-index: 1;
+}
+
+.destination {
+  font-family: var(--font-mono);
+  font-size: 80px;
+  font-weight: 200;
+  line-height: 0.95;
+  color: var(--text-white);
+  white-space: pre-line;
+  margin-bottom: 24px;
+}
+
+.divider {
+  width: 300px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.25);
+  margin-bottom: 8px;
+}
+
+.region {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.indicator {
+  position: absolute;
+  bottom: 40px;
+  right: 80px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 200;
+  color: var(--text-white);
+  z-index: 1;
+}
+
+.dots {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+
+  &.active {
+    background: var(--text-white);
+    border-color: var(--text-white);
+  }
+}
+
+@media (max-width: 768px) {
+  .brand { left: 24px; top: 24px; }
+  .cta { right: 24px; top: 24px; }
+  .bottom { left: 24px; bottom: 24px; }
+  .destination { font-size: 40px; }
+  .indicator { right: 24px; bottom: 24px; }
+}

@@ -1,0 +1,57 @@
+@if (destination(); as d) {
+  <div class="detail">
+    <!-- Photo Panel -->
+    <div class="photo" [style.backgroundImage]="'url(' + d.photos[0] + ')'">
+      <div class="photo-overlay"></div>
+      <span class="photo-brand">ROOFTOP BIVOUAC</span>
+      <span class="photo-num">{{ photoNum() }}</span>
+      <h1 class="photo-location">{{ d.name }}</h1>
+      <span class="photo-region">{{ d.region }}</span>
+    </div>
+
+    <!-- Info Panel -->
+    <div class="info">
+      <!-- Header -->
+      <div class="info-header">
+        <span class="label">FICHE SPOT</span>
+        <a class="header-cta">PARTAGER ↗</a>
+      </div>
+      <hr />
+
+      <!-- Title -->
+      <div class="info-title">
+        <h2>{{ d.ville }}</h2>
+        <p>{{ d.regionFull }}</p>
+      </div>
+      <hr />
+
+      <!-- Ratings -->
+      <div class="ratings">
+        @for (r of d.ratings; track r.label) {
+          <div class="rating" [style.background]="r.color">
+            <span class="rating-label">{{ r.label }}</span>
+            <span class="rating-value">{{ r.value }}</span>
+          </div>
+        }
+      </div>
+      <hr />
+
+      <!-- Description -->
+      <div class="description">
+        <span class="label">NOTES DE VOYAGE</span>
+        <p>{{ d.notes }}</p>
+      </div>
+      <hr />
+
+      <!-- Map -->
+      <div class="map" [style.backgroundImage]="'url(' + (d.photos[1] ?? d.photos[0]) + ')'">
+        <span class="map-label">LOCALISATION GPS</span>
+        <div class="gps-pulse"></div>
+        <div class="gps-pin"><div class="gps-dot"></div></div>
+        <div class="gps-coords">
+          <span>{{ d.coords }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+}

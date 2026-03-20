@@ -1,0 +1,102 @@
+[
+  {
+    "id": "serre-poncon",
+    "ville": "Lac de Serre-Ponçon",
+    "name": "LAC DE\nSERRE-PONÇON",
+    "region": "HAUTES-ALPES, FRANCE",
+    "regionFull": "Hautes-Alpes, France",
+    "notes": "Spot exceptionnel en surplomb du lac, accessible par une piste forestière bien entretenue. Arrivée idéale en fin d'après-midi pour profiter du coucher de soleil sur les montagnes. Le calme est absolu une fois la nuit tombée. Attention au vent qui peut souffler fort sur les crêtes. Aucun point d'eau à proximité — prévoir le ravitaillement avant la montée.",
+    "photos": [
+      "https://images.unsplash.com/photo-1765115407700-4ddf15875935?w=1920&q=80",
+      "https://images.unsplash.com/photo-1648564626497-fbc3f8b2b827?w=1920&q=80",
+      "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=1920&q=80"
+    ],
+    "coords": "44.4833° N, 6.3333° E",
+    "ratings": [
+      { "label": "VUE", "value": "9.2", "color": "#C2956A" },
+      { "label": "CALME", "value": "8.5", "color": "#A38979" },
+      { "label": "ACCÈS", "value": "7.0", "color": "#8F5A3C" },
+      { "label": "GLOBAL", "value": "8.4", "color": "#1A1A1A" }
+    ]
+  },
+  {
+    "id": "gorges-du-verdon",
+    "ville": "Gorges du Verdon",
+    "name": "GORGES\nDU VERDON",
+    "region": "PROVENCE, FRANCE",
+    "regionFull": "Provence-Alpes-Côte d'Azur, France",
+    "notes": "Les falaises du Verdon offrent des points de vue spectaculaires. Bivouac possible sur les plateaux en bord de falaise. Réveil magique au-dessus des eaux turquoise. Piste en terre pour accéder au spot — véhicule avec garde au sol recommandé. Eau disponible au village le plus proche à 15 min.",
+    "photos": [
+      "https://images.unsplash.com/photo-1613139711686-b5366834be37?w=1920&q=80",
+      "https://images.unsplash.com/photo-1725522355814-5686fa611a63?w=1920&q=80",
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80"
+    ],
+    "coords": "43.7167° N, 6.3833° E",
+    "ratings": [
+      { "label": "VUE", "value": "9.8", "color": "#C2956A" },
+      { "label": "CALME", "value": "7.5", "color": "#A38979" },
+      { "label": "ACCÈS", "value": "6.5", "color": "#8F5A3C" },
+      { "label": "GLOBAL", "value": "8.2", "color": "#1A1A1A" }
+    ]
+  },
+  {
+    "id": "cap-corse",
+    "ville": "Cap Corse",
+    "name": "CAP CORSE",
+    "region": "CORSE, FRANCE",
+    "regionFull": "Haute-Corse, France",
+    "notes": "La pointe nord de la Corse réserve des panoramas à couper le souffle. Bivouac face à la mer, entre maquis et rochers. Idéal pour les aurores. Accès par sentier côtier — prévoir 30 min de marche depuis le parking. Pas d'eau sur place.",
+    "photos": [
+      "https://images.unsplash.com/photo-1766167258852-81a8496366bb?w=1920&q=80",
+      "https://images.unsplash.com/photo-1762443547470-9c02c7d35e7f?w=1920&q=80",
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80"
+    ],
+    "coords": "42.9833° N, 9.4500° E",
+    "ratings": [
+      { "label": "VUE", "value": "9.5", "color": "#C2956A" },
+      { "label": "CALME", "value": "9.0", "color": "#A38979" },
+      { "label": "ACCÈS", "value": "6.0", "color": "#8F5A3C" },
+      { "label": "GLOBAL", "value": "8.3", "color": "#1A1A1A" }
+    ]
+  },
+  {
+    "id": "cevennes",
+    "ville": "Cévennes",
+    "name": "CÉVENNES",
+    "region": "LOZÈRE, FRANCE",
+    "regionFull": "Lozère, Occitanie, France",
+    "notes": "Mont Lozère et vallées cévenoles : vastes étendues sauvages pour bivouaquer. Nuits étoilées garanties, peu de pollution lumineuse. Accès par chemins forestiers. Source à 20 min de marche. Attention aux sangliers la nuit.",
+    "photos": [
+      "https://images.unsplash.com/photo-1471860376881-95570eac069c?w=1920&q=80",
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80",
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80"
+    ],
+    "coords": "44.4333° N, 3.7333° E",
+    "ratings": [
+      { "label": "VUE", "value": "8.8", "color": "#C2956A" },
+      { "label": "CALME", "value": "9.5", "color": "#A38979" },
+      { "label": "ACCÈS", "value": "7.5", "color": "#8F5A3C" },
+      { "label": "GLOBAL", "value": "8.6", "color": "#1A1A1A" }
+    ]
+  },
+  {
+    "id": "vanoise",
+    "ville": "Parc de la Vanoise",
+    "name": "VANOISE",
+    "region": "SAVOIE, FRANCE",
+    "regionFull": "Savoie, Auvergne-Rhône-Alpes, France",
+    "notes": "Refuges et alpages au cœur du premier parc national français. Bivouac autorisé en dehors des zones protégées. Panoramas sur les glaciers et les 3000. Accès randonnée — prévoir équipement montagne. Règlementation stricte à respecter.",
+    "photos": [
+      "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1920&q=80",
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80",
+      "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=1920&q=80"
+    ],
+    "coords": "45.3333° N, 6.8333° E",
+    "ratings": [
+      { "label": "VUE", "value": "9.7", "color": "#C2956A" },
+      { "label": "CALME", "value": "9.2", "color": "#A38979" },
+      { "label": "ACCÈS", "value": "5.5", "color": "#8F5A3C" },
+      { "label": "GLOBAL", "value": "8.5", "color": "#1A1A1A" }
+    ]
+  }
+]
