@@ -3,10 +3,11 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DestinationsService } from '../../shared/services/destinations.service';
 import { Destination } from '../../shared/models/destination.model';
 import { MasonryDirective } from '../../shared/directives/masonry.directive';
+import { Minimap } from '../../shared/components/minimap/minimap';
 
 @Component({
   selector: 'app-detail',
-  imports: [RouterLink, MasonryDirective],
+  imports: [RouterLink, MasonryDirective, Minimap],
   templateUrl: './detail.html',
   styleUrl: './detail.scss',
 })

@@ -65,8 +65,7 @@
       <!-- Map -->
       <div class="map">
         <span class="map-label">LOCALISATION GPS</span>
-        <div class="gps-pulse"></div>
-        <div class="gps-pin"><div class="gps-dot"></div></div>
+        <app-minimap [coords]="d.coords" />
         <div class="gps-coords">
           <span>{{ d.coords }}</span>
         </div>
