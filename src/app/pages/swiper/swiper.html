@@ -4,7 +4,7 @@
       <section
         class="slide"
         [class.active]="i === current()"
-        [style.z-index]="i === current() ? 10 : (i < current() ? 5 : 1)"
+        [style.z-index]="getZIndex(i)"
         [style.transform]="'translateY(' + getTranslateY(i) + '%)'"
         [style.backgroundImage]="'url(' + slide.photos[0] + ')'"
         (click)="goToDestination(slide.id)"
