@@ -1,0 +1,38 @@
+<div class="admin-login">
+  <div class="login-card">
+    <h1 class="title">BIVOUAC</h1>
+    <p class="subtitle">Panneau d'administration</p>
+
+    <form (ngSubmit)="onSubmit()" class="form">
+      <label class="field-label">EMAIL</label>
+      <input
+        type="email"
+        class="field-input"
+        [(ngModel)]="email"
+        name="email"
+        placeholder="admin@bivouak.fr"
+        required
+      />
+
+      <label class="field-label">MOT DE PASSE</label>
+      <input
+        type="password"
+        class="field-input"
+        [(ngModel)]="password"
+        name="password"
+        placeholder="••••••••"
+        required
+      />
+
+      @if (error) {
+        <p class="error">{{ error }}</p>
+      }
+
+      <button type="submit" class="btn-submit" [disabled]="loading">
+        {{ loading ? 'Connexion...' : 'SE CONNECTER' }}
+      </button>
+    </form>
+
+    <a routerLink="/" class="back-link">← Retour au site</a>
+  </div>
+</div>

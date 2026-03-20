@@ -1,6 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Sidebar } from '../../shared/sidebar/sidebar';
+import { DestinationsService } from '../../shared/services/destinations.service';
+import { Destination } from '../../shared/models/destination.model';
+
+interface TripRow {
+  id: string;
+  destination: string;
+  region: string;
+  note: string;
+  date: string;
+  status: string;
+}
 
 @Component({
   selector: 'app-admin-list',
@@ -9,11 +20,53 @@ import { Sidebar } from '../../shared/sidebar/sidebar';
   styleUrl: './admin-list.scss',
 })
 export class AdminList {
-  trips = [
-    { destination: 'Col du Galibier', region: 'Alpes', note: '4.8', date: '12.03.2026', status: 'PUBLIÉ' },
-    { destination: 'Gorges du Verdon', region: 'Provence', note: '4.5', date: '08.03.2026', status: 'PUBLIÉ' },
-    { destination: 'Lac de Serre-Ponçon', region: 'Alpes', note: '4.2', date: '01.03.2026', status: 'BROUILLON' },
-    { destination: 'Dune du Pilat', region: 'Aquitaine', note: '4.9', date: '25.02.2026', status: 'PUBLIÉ' },
-    { destination: 'Cirque de Gavarnie', region: 'Pyrénées', note: '4.6', date: '18.02.2026', status: 'BROUILLON' },
-  ];
+  private destinationsService = inject(DestinationsService);
+
+  trips = signal<TripRow[]>([]);
+  loading = signal(true);
+  stats = computed(() => {
+    const t = this.trips();
+    const regions = new Set(t.map((r) => r.region));
+    return { spots: t.length, regions: regions.size };
+  });
+
+  constructor() {
+    this.destinationsService.refresh(); // Force un rechargement pour inclure les créations récentes
+    this.destinationsService.getDestinations().subscribe({
+      next: (destinations) => {
+        this.trips.set(
+          destinations.map((d) => ({
+            id: d.id,
+            destination: d.ville,
+            region: d.regionFull || d.region,
+            note: this.getGlobalRating(d),
+            date: this.formatDate((d as Destination & { created_at?: string }).created_at),
+            status: 'PUBLIÉ',
+          }))
+        );
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false),
+    });
+  }
+
+  private getGlobalRating(d: Destination): string {
+    const global = d.ratings?.find((r) => r.label === 'GLOBAL');
+    return global?.value ?? '-';
+  }
+
+  private formatDate(iso?: string): string {
+    if (!iso) return '-';
+    const [datePart] = iso.split(' ');
+    const [y, m, d] = datePart.split('-');
+    return `${d}.${m}.${y}`;
+  }
+
+  deleteTrip(id: string) {
+    if (!confirm(`Supprimer ce voyage ?`)) return;
+    this.destinationsService.deleteDestination(id).subscribe({
+      next: () => {},
+      error: (err) => alert(err.error?.error || 'Erreur lors de la suppression'),
+    });
+  }
 }

@@ -4,48 +4,78 @@
   <main class="content">
     <!-- Top Bar -->
     <div class="top-bar">
-      <span class="label">NOUVEAU VOYAGE</span>
+      <span class="label">{{ isEditMode ? 'MODIFIER LE VOYAGE' : 'NOUVEAU VOYAGE' }}</span>
       <div class="top-actions">
+        @if (saveError) {
+          <span class="save-error">{{ saveError }}</span>
+        }
         <a class="btn-cancel" routerLink="/admin">ANNULER</a>
-        <button class="btn-save">ENREGISTRER</button>
+        <button class="btn-save" (click)="save()" [disabled]="saving">{{ saving ? 'Enregistrement...' : 'ENREGISTRER' }}</button>
       </div>
     </div>
     <hr />
 
     <!-- Form Area -->
+    @if (loadingForm) {
+      <div class="form-loading">Chargement des données…</div>
+    } @else {
     <div class="form-area">
       <!-- Left Column -->
       <div class="left-col">
         <label class="field-label">DESTINATION</label>
-        <input type="text" class="field-input" placeholder="Nom du lieu" />
+        <input type="text" class="field-input" [(ngModel)]="destination" name="destination" placeholder="Nom du lieu" />
         <hr />
 
         <label class="field-label">RÉGION / PAYS</label>
-        <input type="text" class="field-input" placeholder="Ex: Hautes-Alpes, France" />
+        <input type="text" class="field-input" [(ngModel)]="region" name="region" placeholder="Ex: HAUTES-ALPES, FRANCE" />
+        <input type="text" class="field-input" [(ngModel)]="regionFull" name="regionFull" placeholder="Ex: Hautes-Alpes, France (complet)" />
         <hr />
 
         <label class="field-label">COORDONNÉES GPS</label>
         <div class="gps-row">
-          <input type="text" class="field-input" placeholder="Latitude" />
-          <input type="text" class="field-input" placeholder="Longitude" />
+          <input type="text" class="field-input" [(ngModel)]="latitude" name="latitude" placeholder="Latitude" />
+          <input type="text" class="field-input" [(ngModel)]="longitude" name="longitude" placeholder="Longitude" />
         </div>
         <hr />
 
         <label class="field-label">NOTES DE VOYAGE</label>
-        <textarea class="field-textarea" placeholder="Décrivez le spot..."></textarea>
+        <textarea class="field-textarea" [(ngModel)]="notes" name="notes" placeholder="Décrivez le spot..."></textarea>
         <hr />
 
         <label class="field-label">STATUT</label>
         <div class="status-row">
-          <button class="status-btn active">BROUILLON</button>
-          <button class="status-btn">PUBLIÉ</button>
+          <button type="button" class="status-btn" [class.active]="status === 'draft'" (click)="setStatus('draft')">BROUILLON</button>
+          <button type="button" class="status-btn" [class.active]="status === 'published'" (click)="setStatus('published')">PUBLIÉ</button>
         </div>
       </div>
 
       <!-- Right Column -->
       <div class="right-col">
-        <div class="photo-upload">
-          <span class="photo-label">GLISSER UNE PHOTO OU CLIQUER</span>
+        <div
+          class="photo-upload"
+          [class.dragging]="isDragging"
+          [class.uploading]="uploadProgress"
+          (click)="fileInput.click()"
+          (drop)="onDrop($event)"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave()"
+        >
+          <input #fileInput type="file" accept="image/*" multiple hidden (change)="onFileSelect($event)" />
+          @if (photos.length === 0) {
+            <span class="photo-label">{{ uploadProgress ? 'Upload en cours...' : 'GLISSER DES PHOTOS OU CLIQUER' }}</span>
+          } @else {
+            <div class="photo-previews">
+              @for (url of photos; track url; let i = $index) {
+                <div class="photo-preview">
+                  <img [src]="url" alt="Photo {{ i + 1 }}" />
+                  <button type="button" class="photo-remove" (click)="removePhoto(i); $event.stopPropagation()">×</button>
+                </div>
+              }
+              @if (uploadProgress) {
+                <div class="photo-preview loading">...</div>
+              }
+            </div>
+          }
         </div>
         <hr />
 
@@ -54,15 +84,15 @@
           <div class="rating-fields">
             <div class="rating-field">
               <label>VUE</label>
-              <input type="number" min="0" max="10" step="0.1" placeholder="0.0" />
+              <input type="number" min="0" max="10" step="0.1" [(ngModel)]="vue" name="vue" placeholder="0.0" />
             </div>
             <div class="rating-field">
               <label>CALME</label>
-              <input type="number" min="0" max="10" step="0.1" placeholder="0.0" />
+              <input type="number" min="0" max="10" step="0.1" [(ngModel)]="calme" name="calme" placeholder="0.0" />
             </div>
             <div class="rating-field">
               <label>ACCÈS</label>
-              <input type="number" min="0" max="10" step="0.1" placeholder="0.0" />
+              <input type="number" min="0" max="10" step="0.1" [(ngModel)]="acces" name="acces" placeholder="0.0" />
             </div>
           </div>
         </div>
@@ -73,5 +103,6 @@
         </div>
       </div>
     </div>
+    }
   </main>
 </div>

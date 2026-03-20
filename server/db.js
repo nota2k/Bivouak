@@ -32,6 +32,13 @@ db.exec(`
     color TEXT NOT NULL,
     FOREIGN KEY (destination_id) REFERENCES destinations(id)
   );
+
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
 `);
 
 // Données initiales (3 premières destinations du JSON)
@@ -116,5 +123,13 @@ for (const d of seedData) {
     d.ratings.forEach((r) => insertRating.run(d.id, r.label, r.value, r.color));
   }
 }
+
+// Admin user par défaut (email: admin@bivouak.fr, mot de passe: admin123)
+const bcrypt = require('bcrypt');
+const insertUser = db.prepare(`
+  INSERT OR IGNORE INTO users (email, password_hash) VALUES (?, ?)
+`);
+const hash = bcrypt.hashSync('admin123', 10);
+insertUser.run('admin@bivouak.fr', hash);
 
 module.exports = db;

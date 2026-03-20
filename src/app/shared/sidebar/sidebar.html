@@ -3,10 +3,12 @@
   <hr />
   <ul class="nav">
     <li><a routerLink="/admin" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">TABLEAU DE BORD</a></li>
-    <li><a routerLink="/admin" class="nav-item active" routerLinkActive="active">VOYAGES</a></li>
+    <li><a routerLink="/admin" class="nav-item" routerLinkActive="active">VOYAGES</a></li>
     <li><a class="nav-item">SPOTS</a></li>
     <li><a class="nav-item">UTILISATEURS</a></li>
   </ul>
   <hr />
   <a class="nav-item">PARAMÈTRES</a>
+  <hr />
+  <a class="nav-item logout" (click)="logout()" role="button">DÉCONNEXION</a>
 </nav>

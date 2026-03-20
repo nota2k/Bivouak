@@ -50,4 +50,14 @@ hr {
     color: var(--text-white);
     font-weight: 700;
   }
+
+  &.logout {
+    margin-top: auto;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 11px;
+
+    &:hover {
+      color: var(--text-white);
+    }
+  }
 }
