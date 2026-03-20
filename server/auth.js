@@ -5,8 +5,8 @@ const db = require('./db');
 const JWT_SECRET = process.env.JWT_SECRET || 'bivouak-secret-dev';
 const JWT_EXPIRES = '7d';
 
-function login(email, password) {
-  const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+async function login(email, password) {
+  const user = await db.get('SELECT * FROM users WHERE email = ?', email);
   if (!user) return null;
   if (!bcrypt.compareSync(password, user.password_hash)) return null;
   const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES });

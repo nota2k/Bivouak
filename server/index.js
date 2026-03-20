@@ -8,6 +8,9 @@ const db = require('./db');
 const { login, verifyToken, authMiddleware } = require('./auth');
 
 const app = express();
+
+const startServer = async () => {
+  await db.init();
 app.use(cors());
 app.use(express.json());
 
@@ -36,13 +39,13 @@ const upload = multer({
 app.get('/api/health', (req, res) => res.json({ ok: true, routes: ['auth', 'upload', 'destinations'] }));
 
 // --- Auth ---
-app.post('/api/auth/login', (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body || {};
     if (!email || !password) {
       return res.status(400).json({ error: 'Email et mot de passe requis' });
     }
-    const result = login(email, password);
+    const result = await login(email, password);
     if (!result) {
       return res.status(401).json({ error: 'Identifiants incorrects' });
     }
@@ -80,36 +83,45 @@ app.post('/api/upload', authMiddleware, (req, res, next) => {
 });
 
 // GET toutes les destinations
-app.get('/api/destinations', (req, res) => {
-  const destinations = db.prepare(`
-    SELECT * FROM destinations ORDER BY created_at DESC
-  `).all();
+app.get('/api/destinations', async (req, res) => {
+  try {
+    const destinations = await db.all(`SELECT * FROM destinations ORDER BY created_at DESC`);
 
-  // Récupérer photos et ratings pour chaque destination
-  const result = destinations.map(d => ({
-    ...d,
-    regionFull: d.region_full,
-    photos: db.prepare('SELECT url FROM photos WHERE destination_id = ?').all(d.id).map(p => p.url),
-    ratings: db.prepare('SELECT label, value, color FROM ratings WHERE destination_id = ?').all(d.id)
-  }));
+    const result = await Promise.all(
+      destinations.map(async (d) => ({
+        ...d,
+        regionFull: d.region_full,
+        photos: (await db.all('SELECT url FROM photos WHERE destination_id = ?', d.id)).map((p) => p.url),
+        ratings: await db.all('SELECT label, value, color FROM ratings WHERE destination_id = ?', d.id),
+      }))
+    );
 
-  res.json(result);
+    res.json(result);
+  } catch (err) {
+    console.error('Get destinations error:', err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
 });
 
 // GET une destination par ID
-app.get('/api/destinations/:id', (req, res) => {
-  const dest = db.prepare('SELECT * FROM destinations WHERE id = ?').get(req.params.id);
-  if (!dest) return res.status(404).json({ error: 'Not found' });
+app.get('/api/destinations/:id', async (req, res) => {
+  try {
+    const dest = await db.get('SELECT * FROM destinations WHERE id = ?', req.params.id);
+    if (!dest) return res.status(404).json({ error: 'Not found' });
 
-  dest.photos = db.prepare('SELECT url FROM photos WHERE destination_id = ?').all(dest.id).map(p => p.url);
-  dest.ratings = db.prepare('SELECT label, value, color FROM ratings WHERE destination_id = ?').all(dest.id);
-  dest.regionFull = dest.region_full;
+    dest.photos = (await db.all('SELECT url FROM photos WHERE destination_id = ?', dest.id)).map((p) => p.url);
+    dest.ratings = await db.all('SELECT label, value, color FROM ratings WHERE destination_id = ?', dest.id);
+    dest.regionFull = dest.region_full;
 
-  res.json(dest);
+    res.json(dest);
+  } catch (err) {
+    console.error('Get destination error:', err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
 });
 
 // POST créer une destination (protégé)
-app.post('/api/destinations', authMiddleware, (req, res) => {
+app.post('/api/destinations', authMiddleware, async (req, res) => {
   try {
     const { id, ville, name, region, regionFull, notes, coords, photos, ratings } = req.body || {};
 
@@ -120,20 +132,34 @@ app.post('/api/destinations', authMiddleware, (req, res) => {
       });
     }
 
-    const insert = db.prepare(`
-      INSERT OR REPLACE INTO destinations (id, ville, name, region, region_full, notes, coords)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `);
-    insert.run(id, ville, name, region, regionFull || region, notes || null, coords || null);
+    await db.run(
+      `INSERT OR REPLACE INTO destinations (id, ville, name, region, region_full, notes, coords)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      id,
+      ville,
+      name,
+      region,
+      regionFull || region,
+      notes || null,
+      coords || null
+    );
 
-    db.prepare('DELETE FROM photos WHERE destination_id = ?').run(id);
-    const insertPhoto = db.prepare('INSERT INTO photos (destination_id, url) VALUES (?, ?)');
-    const photosToSave = (photos || []).slice(0, 5); // 1 mise en avant + 4 galerie
-    photosToSave.forEach((url) => insertPhoto.run(id, url));
+    await db.run('DELETE FROM photos WHERE destination_id = ?', id);
+    const photosToSave = (photos || []).slice(0, 5);
+    for (const url of photosToSave) {
+      await db.run('INSERT INTO photos (destination_id, url) VALUES (?, ?)', id, url);
+    }
 
-    db.prepare('DELETE FROM ratings WHERE destination_id = ?').run(id);
-    const insertRating = db.prepare('INSERT INTO ratings (destination_id, label, value, color) VALUES (?, ?, ?, ?)');
-    (ratings || []).forEach((r) => insertRating.run(id, r.label, r.value, r.color));
+    await db.run('DELETE FROM ratings WHERE destination_id = ?', id);
+    for (const r of ratings || []) {
+      await db.run(
+        'INSERT INTO ratings (destination_id, label, value, color) VALUES (?, ?, ?, ?)',
+        id,
+        r.label,
+        r.value,
+        r.color
+      );
+    }
 
     res.status(201).json({ id });
   } catch (err) {
@@ -143,15 +169,15 @@ app.post('/api/destinations', authMiddleware, (req, res) => {
 });
 
 // DELETE supprimer une destination (protégé)
-app.delete('/api/destinations/:id', authMiddleware, (req, res) => {
+app.delete('/api/destinations/:id', authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
-    const dest = db.prepare('SELECT id FROM destinations WHERE id = ?').get(id);
+    const dest = await db.get('SELECT id FROM destinations WHERE id = ?', id);
     if (!dest) return res.status(404).json({ error: 'Destination introuvable' });
 
-    db.prepare('DELETE FROM photos WHERE destination_id = ?').run(id);
-    db.prepare('DELETE FROM ratings WHERE destination_id = ?').run(id);
-    db.prepare('DELETE FROM destinations WHERE id = ?').run(id);
+    await db.run('DELETE FROM photos WHERE destination_id = ?', id);
+    await db.run('DELETE FROM ratings WHERE destination_id = ?', id);
+    await db.run('DELETE FROM destinations WHERE id = ?', id);
 
     res.status(204).send();
   } catch (err) {
@@ -160,7 +186,13 @@ app.delete('/api/destinations/:id', authMiddleware, (req, res) => {
   }
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+};
+
+startServer().catch((err) => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
 });
