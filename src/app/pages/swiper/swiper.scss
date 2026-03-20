@@ -16,22 +16,26 @@
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .slide {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  width: 93%;
+  height: 93%;
+  left: 3.5%;
+  top: 3.5%;
   background-size: cover;
   background-position: center;
   transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   pointer-events: none;
+  border-radius: 4px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
 
   &.active {
     pointer-events: auto;
     cursor: pointer;
+    view-transition-name: slide-hero;
   }
 }
 

@@ -5,7 +5,7 @@
 }
 
 :root {
-  --bg-page: #E8E9EB;
+  --bg-page: #000;
   --bg-caramel: #C2956A;
   --bg-taupe: #A38979;
   --bg-sienna: #8F5A3C;
@@ -31,3 +31,14 @@ html, body {
 }
 
 a { text-decoration: none; color: inherit; }
+
+/* View Transitions API - transition entre les pages (morph taille/position) */
+::view-transition-group(slide-hero) {
+  animation-duration: 0.8s;
+}
+
+/* Opacité de l'image : garder court */
+::view-transition-old(slide-hero),
+::view-transition-new(slide-hero) {
+  animation-duration: 0.25s;
+}

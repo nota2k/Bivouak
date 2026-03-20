@@ -28,9 +28,11 @@ export class Swiper {
     if (this.isAnimating) return;
     const total = this.slides().length;
     if (!total) return;
+    const c = this.current();
+    if (c >= total - 1) return; // Dernière slide : l'animation s'arrête
     this.isAnimating = true;
     this.direction.set('next');
-    this.current.update((c) => (c + 1) % total);
+    this.current.update((cur) => cur + 1);
     setTimeout(() => (this.isAnimating = false), 600);
   }
 
@@ -38,9 +40,11 @@ export class Swiper {
     if (this.isAnimating) return;
     const total = this.slides().length;
     if (!total) return;
+    const c = this.current();
+    if (c <= 0) return; // Première slide : l'animation s'arrête
     this.isAnimating = true;
     this.direction.set('prev');
-    this.current.update((c) => (c - 1 + total) % total);
+    this.current.update((cur) => cur - 1);
     setTimeout(() => (this.isAnimating = false), 600);
   }
 
@@ -59,24 +63,22 @@ export class Swiper {
 
   getTranslateY(i: number): number {
     const c = this.current();
-    const dir = this.direction();
-    if (dir === 'next') {
-      // Scroll down : précédentes en haut (-100), actuelle à 0, suivantes en bas (100)
-      return i < c ? -100 : i === c ? 0 : 100;
-    }
-    // Scroll up (inversé) : précédentes en bas (100), actuelle à 0, suivantes en haut (-100)
-    // La slide s'aimante en bas : elle vient du bas (100) et snap à 0
-    return i < c ? 100 : i === c ? 0 : -100;
+    // Même logique pour next et prev : actuelle et précédentes à 0, suivantes à 100
+    // Next : la suivante monte (100 → 0) et superpose. Prev : l'actuelle redescend (0 → 100) une par une
+    return i <= c ? 0 : 100;
   }
 
   getZIndex(i: number): number {
     const c = this.current();
     const dir = this.direction();
-    if (i === c) return 10;
+    const total = this.slides().length;
     if (dir === 'next') {
-      return i < c ? 5 : 1; // précédentes au-dessus, suivantes en dessous
+      // La suivante monte et superpose : actuelle au-dessus
+      return i === c ? 10 : i < c ? 5 : 1;
     }
-    return i < c ? 1 : 5; // inversé : précédentes en dessous, suivantes au-dessus
+    // Prev : la slide quittée (c+1) redescend au-dessus, révélant la précédente en dessous
+    if (i === c + 1 && c + 1 < total) return 10; // sortante, au-dessus
+    return i <= c ? 5 : 1;
   }
 
   onWheel(e: WheelEvent) {
