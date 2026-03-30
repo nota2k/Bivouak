@@ -9,6 +9,14 @@ const { login, verifyToken, authMiddleware } = require('./auth');
 
 const app = express();
 
+/** URLs absolues (ex. localhost en dev) → chemin relatif /uploads/... pour la prod */
+function normalizePhotoUrl(url) {
+  if (!url || typeof url !== 'string') return url;
+  const i = url.indexOf('/uploads/');
+  if (i >= 0) return url.slice(i);
+  return url;
+}
+
 const startServer = async () => {
   await db.init();
 
@@ -98,7 +106,7 @@ const startServer = async () => {
         return res.status(400).json({ error: 'Aucun fichier' });
       }
 
-      const url = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+      const url = `/uploads/${req.file.filename}`;
       res.json({ url });
     });
   });
@@ -111,7 +119,9 @@ const startServer = async () => {
         destinations.map(async (d) => ({
           ...d,
           regionFull: d.region_full,
-          photos: (await db.all('SELECT url FROM photos WHERE destination_id = ?', d.id)).map((p) => p.url),
+          photos: (await db.all('SELECT url FROM photos WHERE destination_id = ?', d.id)).map((p) =>
+            normalizePhotoUrl(p.url)
+          ),
           ratings: await db.all('SELECT label, value, color FROM ratings WHERE destination_id = ?', d.id),
         }))
       );
@@ -128,7 +138,9 @@ const startServer = async () => {
       const dest = await db.get('SELECT * FROM destinations WHERE id = ?', req.params.id);
       if (!dest) return res.status(404).json({ error: 'Not found' });
 
-      dest.photos = (await db.all('SELECT url FROM photos WHERE destination_id = ?', dest.id)).map((p) => p.url);
+      dest.photos = (await db.all('SELECT url FROM photos WHERE destination_id = ?', dest.id)).map((p) =>
+        normalizePhotoUrl(p.url)
+      );
       dest.ratings = await db.all('SELECT label, value, color FROM ratings WHERE destination_id = ?', dest.id);
       dest.regionFull = dest.region_full;
 
@@ -161,7 +173,7 @@ const startServer = async () => {
 
       await db.run('DELETE FROM photos WHERE destination_id = ?', id);
       for (const url of (photos || []).slice(0, 5)) {
-        await db.run('INSERT INTO photos (destination_id, url) VALUES (?, ?)', id, url);
+        await db.run('INSERT INTO photos (destination_id, url) VALUES (?, ?)', id, normalizePhotoUrl(url));
       }
 
       await db.run('DELETE FROM ratings WHERE destination_id = ?', id);
