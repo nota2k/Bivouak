@@ -28,6 +28,8 @@ export class AdminForm implements OnInit {
   notes = '';
   status: 'draft' | 'published' = 'draft';
   photos: string[] = [];
+  /** Index de la photo mise en avant (première en base = hero) */
+  featuredPhotoIndex = 0;
   vue = '';
   calme = '';
   acces = '';
@@ -91,6 +93,7 @@ export class AdminForm implements OnInit {
     this.regionFull = (d.regionFull ?? d.region_full ?? d.region) || '';
     this.notes = d.notes || '';
     this.photos = [...(d.photos || [])];
+    this.featuredPhotoIndex = 0;
     const { lat, lng } = this.parseCoords(d.coords || '');
     this.latitude = lat;
     this.longitude = lng;
@@ -153,6 +156,25 @@ export class AdminForm implements OnInit {
 
   removePhoto(i: number) {
     this.photos.splice(i, 1);
+    if (this.photos.length === 0) {
+      this.featuredPhotoIndex = 0;
+    } else if (i < this.featuredPhotoIndex) {
+      this.featuredPhotoIndex--;
+    } else if (i === this.featuredPhotoIndex) {
+      this.featuredPhotoIndex = 0;
+    }
+  }
+
+  setFeaturedPhoto(i: number) {
+    if (i >= 0 && i < this.photos.length) this.featuredPhotoIndex = i;
+  }
+
+  /** Ordre enregistré en base : mise en avant en premier */
+  private photosForSave(): string[] {
+    if (!this.photos.length) return [];
+    const featured = this.photos[this.featuredPhotoIndex];
+    const rest = this.photos.filter((_, idx) => idx !== this.featuredPhotoIndex);
+    return [featured, ...rest];
   }
 
   setStatus(s: 'draft' | 'published') {
@@ -178,7 +200,7 @@ export class AdminForm implements OnInit {
       regionFull: (this.regionFull || this.region).trim(),
       notes: this.notes.trim(),
       coords: this.coords,
-      photos: this.photos,
+      photos: this.photosForSave(),
       ratings: [
         { label: 'VUE', value: String(this.vue || '0'), color: '#C2956A' },
         { label: 'CALME', value: String(this.calme || '0'), color: '#A38979' },

@@ -67,9 +67,18 @@
           } @else {
             <div class="photo-previews">
               @for (url of photos; track url; let i = $index) {
-                <div class="photo-preview" [class.featured]="i === 0">
+                <div class="photo-preview" [class.featured]="i === featuredPhotoIndex">
                   <img [src]="url" alt="Photo {{ i + 1 }}" />
-                  <span class="photo-preview-label">{{ i === 0 ? 'Mise en avant' : 'Galerie' }}</span>
+                  <span class="photo-preview-label">{{ i === featuredPhotoIndex ? 'Mise en avant' : 'Galerie' }}</span>
+                  @if (i !== featuredPhotoIndex) {
+                    <button
+                      type="button"
+                      class="photo-set-featured"
+                      (click)="setFeaturedPhoto(i); $event.stopPropagation()"
+                    >
+                      Mettre en avant
+                    </button>
+                  }
                   <button type="button" class="photo-remove" (click)="removePhoto(i); $event.stopPropagation()">×</button>
                 </div>
               }
